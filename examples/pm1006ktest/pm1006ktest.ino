@@ -1,5 +1,5 @@
 /**
- * PM1006K Test
+ * PM1006K Driver Test
  * Author: Kevin Lutzer
 */
 
