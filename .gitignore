@@ -1,3 +1,10 @@
+# Editor
+.vscode/
+
+# Build
+bin/
+.cache/
+
 # Prerequisites
 *.d
 
@@ -30,3 +37,4 @@
 *.exe
 *.out
 *.app
+
