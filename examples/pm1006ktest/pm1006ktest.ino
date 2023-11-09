@@ -8,7 +8,7 @@
 
 #define PM1006K_RX_PIN 4
 #define PM1006K_TX_PIN 5
-#define PM1006K_FAN_PIN 9
+#define PM1006K_FAN_PIN 10
 
 #define SAMPLE_RATE 2000 // ms
 

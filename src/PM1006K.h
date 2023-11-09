@@ -37,12 +37,12 @@ public:
   static const int BAUD_RATE = 9600;
   const int CMD_TIMEOUT = 1000;
 
-  const uint8_t CMD_TAKE_MEASUREMENT_LEN = 4;
-  const unsigned char CMD_TAKE_MEASUREMENT[4] = {0x11, 0x01, 0x02, 0xEC};
+  const uint8_t CMD_TAKE_MEASUREMENT_LEN = 5;
+  const unsigned char CMD_TAKE_MEASUREMENT[5] = {0x11, 0x02, 0x0B, 0x01, 0xE1};
   
   // From the datasheet there is only one command that is avaliable to take the
-  // appropriate readings. The response is 20 bytes long including the header
-  const uint8_t CMD_TAKE_MEASUREMENT_RESP_LEN = 20;
+  // appropriate readings. The response is 16 bytes long including the header
+  const uint8_t CMD_TAKE_MEASUREMENT_RESP_LEN = 16;
 
   PM1006K(Stream *stream);
   ~PM1006K();

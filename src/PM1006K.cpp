@@ -76,8 +76,7 @@ int PM1006K::getPM10() {
 */
 bool PM1006K::takeMeasurement() {
   uint8_t rxBuf[CMD_TAKE_MEASUREMENT_RESP_LEN];
-
-  if(!this->sendCMD(CMD_TAKE_MEASUREMENT, 5, rxBuf, CMD_TAKE_MEASUREMENT_RESP_LEN)) {
+  if(!this->sendCMD(CMD_TAKE_MEASUREMENT, CMD_TAKE_MEASUREMENT_LEN, rxBuf, CMD_TAKE_MEASUREMENT_RESP_LEN)) {
     return false;
   }
   
@@ -106,7 +105,7 @@ bool PM1006K::takeMeasurement() {
  * @param buf is the data to be checked
 */
 bool PM1006K::isValidMeasurementFrame(uint8_t * buf) {
-    return buf[0] == 0x16 && buf[1] == 0x0D && buf[2] == 0x02;
+    return buf[0] == 0x16 && buf[1] == 0x11 && buf[2] == 0x0B;
 }
 
 /*!
@@ -119,16 +118,28 @@ bool PM1006K::isValidMeasurementFrame(uint8_t * buf) {
  * @return true on success and false otherwise.
 */
 bool PM1006K::sendCMD(const unsigned char * txBuf, uint8_t txLen, unsigned char * rxBuf, uint8_t rxLen) {
+
+  // Clear the RX buffer
+  while (this->_stream->available()) {
+    this->_stream->read();
+  }
+
+  // Send the command to get the measurement
   this->_stream->write(txBuf, txLen);
 
   int i = 0;
   unsigned long start = millis();
   while (((millis() - start) < CMD_TIMEOUT) && i < rxLen) {
-      while (this->_stream->available()) {
-          uint8_t c = this->_stream->read();
-          rxBuf[i++] = c;
-      }
-      yield();
+    while (this->_stream->available()) {
+      rxBuf[i] = this->_stream->read();
+      i++;
+    }
+    yield();
+  }
+
+  // // Failed because of timeout
+  if (i < rxLen) {
+    return false;
   }
 
   return true;
