@@ -44,19 +44,60 @@ public:
   // appropriate readings. The response is 16 bytes long including the header
   const uint8_t CMD_TAKE_MEASUREMENT_RESP_LEN = 16;
 
+  /*!
+    *  @brief class constructor for using hardware or software serial
+    *  @param stream is the serial instance to use. Stream can be either of
+    *  type HardwareSerial or Software Serial. The  
+  */
   PM1006K(Stream *stream);
-  ~PM1006K();
 
+  /*!
+    * @brief takes a measurement for PM2.5, PM1.0, and PM10 concentrations
+    * @return true if successful, false if otherwise
+  */
   bool takeMeasurement();
 
+  /*!
+    * @brief returns the last measured PM2.5 reading in ug/(m^3). 
+    * @returns -1 if there has been no measurement taken or the value
+    * from the last successful measurement.
+  */
   int getPM2_5();
+
+  /*!
+    * @brief returns the last measured PM1.0 reading in ug/(m^3). 
+    * @returns -1 if there has been no measurement taken or the value
+    * from the last successful measurement.
+  */
   int getPM1_0();
+
+  /*!
+    * @brief returns the last measured PM10 reading in ug/(m^3). 
+    * @returns -1 if there has been no measurement taken or the value
+    * from the last successful measurement.
+  */
   int getPM10();
 
 private:
 
   Stream *_stream = NULL;
+
+  /*!
+    * @brief sends a command to the PM1006K sensor and reads the returned data. This command will fail
+    * and timeout if the sensor does not 
+    * @param txBuf a buffer that contains the data to be sent to the sensor. 
+    * @param txLen the length of the txBuf buffer.
+    * @param rxBuf a buffer that will be filled with data that is return
+    * @param rxLen the length of the rxBuf buffer.
+    * @return true on success and false otherwise.
+  */
   bool sendCMD(const unsigned char * txBuf, uint8_t txLen, unsigned char * rxBuf, uint8_t rxLen);
+
+  /*!
+    * @brief checks to see if the buffer paramter contains the correct start bytes
+    * to signify a valid measurement frame.
+    * @param buf is the data to be checked
+  */
   bool isValidMeasurementFrame(uint8_t * buf);
 
   int _lastPM2_5 = -1;
