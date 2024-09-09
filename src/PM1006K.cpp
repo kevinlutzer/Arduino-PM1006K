@@ -28,52 +28,23 @@
 #include "PM1006K.h"
 #include "Stream.h"
 
-/*!
- *  @brief class constructor for using hardware or software serial
- *  @param stream is the serial instance to use. Stream can be either of
- *  type HardwareSerial or Software Serial. The  
- */
+
 PM1006K::PM1006K(Stream *stream) {
   _stream = stream;
 }
 
-PM1006K::~PM1006K() {
-  if (_stream) {
-    delete _stream;
-  }
-}
-
-/*!
-* @brief returns the last measured PM2.5 reading in ug/(m^3). 
-* @returns -1 if there has been no measurement taken or the value
-* from the last successful measurement.
-*/
 int PM1006K::getPM2_5() {
   return this->_lastPM2_5;
 }
 
-/*!
-* @brief returns the last measured PM1.0 reading in ug/(m^3). 
-* @returns -1 if there has been no measurement taken or the value
-* from the last successful measurement.
-*/
 int PM1006K::getPM1_0() {
   return this->_lastPM1_0;
 }
 
-/*!
-* @brief returns the last measured PM10 reading in ug/(m^3). 
-* @returns -1 if there has been no measurement taken or the value
-* from the last successful measurement.
-*/
 int PM1006K::getPM10() {
   return this->_lastPM10;
 }
 
-/*!
- * @brief takes a measurement for PM2.5, PM1.0, and PM10 concentrations
- * @return true if successful, false if otherwise
-*/
 bool PM1006K::takeMeasurement() {
   uint8_t rxBuf[CMD_TAKE_MEASUREMENT_RESP_LEN];
   if(!this->sendCMD(CMD_TAKE_MEASUREMENT, CMD_TAKE_MEASUREMENT_LEN, rxBuf, CMD_TAKE_MEASUREMENT_RESP_LEN)) {
@@ -99,24 +70,10 @@ bool PM1006K::takeMeasurement() {
   return true;
 }
 
-/*!
- * @brief checks to see if the buffer paramter contains the correct start bytes
- * to signify a valid measurement frame.
- * @param buf is the data to be checked
-*/
 bool PM1006K::isValidMeasurementFrame(uint8_t * buf) {
     return buf[0] == 0x16 && buf[1] == 0x11 && buf[2] == 0x0B;
 }
 
-/*!
- * @brief sends a command to the PM1006K sensor and reads the returned data. This command will fail
- * and timeout if the sensor does not 
- * @param txBuf a buffer that contains the data to be sent to the sensor. 
- * @param txLen the length of the txBuf buffer.
- * @param rxBuf a buffer that will be filled with data that is return
- * @param rxLen the length of the rxBuf buffer.
- * @return true on success and false otherwise.
-*/
 bool PM1006K::sendCMD(const unsigned char * txBuf, uint8_t txLen, unsigned char * rxBuf, uint8_t rxLen) {
 
   // Clear the RX buffer
@@ -137,7 +94,7 @@ bool PM1006K::sendCMD(const unsigned char * txBuf, uint8_t txLen, unsigned char 
     yield();
   }
 
-  // // Failed because of timeout
+  // Failed because of timeout
   if (i < rxLen) {
     return false;
   }
