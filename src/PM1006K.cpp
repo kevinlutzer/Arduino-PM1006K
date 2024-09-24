@@ -65,7 +65,7 @@ bool PM1006K::takeMeasurement() {
   */
   this->_lastPM2_5 = (rxBuf[5] << 8) | rxBuf[6];
   this->_lastPM1_0 = (rxBuf[9] << 8) | rxBuf[10];
-  this->_lastPM10 = (rxBuf[13] << 8) | rxBuf[12];
+  this->_lastPM10 = (rxBuf[13] << 8) | rxBuf[14];
 
   return true;
 }
